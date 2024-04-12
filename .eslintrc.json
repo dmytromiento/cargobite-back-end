@@ -10,6 +10,13 @@
     "plugin:prettier/recommended"
   ],
   "plugins": ["import"],
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "alwaysTryTypes": true
+      }
+    }
+  },
   "rules": {
     "no-unused-vars": "warn",
     "import/order": [
