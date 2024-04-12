@@ -89,3 +89,40 @@ export const updateProfileIcon = async (req: Request, res: Response) => {
     handleErrorResponse(error, res);
   }
 };
+
+const updateFavoritesSchema = z.object({
+  id: z.number(),
+  favorite: z.string(),
+});
+export const updateFavorites = async (req: Request, res: Response) => {
+  try {
+    const favoriteInput = updateFavoritesSchema.parse(req.body);
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id: favoriteInput.id },
+    });
+
+    if (!existingUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    let updatedFavorites: string[];
+    if (existingUser.favorites.includes(favoriteInput.favorite)) {
+      updatedFavorites = existingUser.favorites.filter(
+        (favorite) => favorite !== favoriteInput.favorite
+      );
+    } else {
+      updatedFavorites = [...existingUser.favorites, favoriteInput.favorite];
+    }
+
+    const user = await prisma.user.update({
+      where: { id: favoriteInput.id },
+      data: { favorites: updatedFavorites },
+    });
+
+    res.json(user);
+  } catch (error) {
+    handleErrorResponse(error, res);
+  }
+};
