@@ -30,7 +30,7 @@ export const register = async (req: Request, res: Response) => {
       },
     });
 
-    res.json(user);
+    res.status(201).json(user);
   } catch (error) {
     handleErrorResponse(error, res);
   }
@@ -55,6 +55,34 @@ export const getUserById = async (req: Request, res: Response) => {
       res.status(404).json({ message: "User not found" });
       return;
     }
+
+    res.json(user);
+  } catch (error) {
+    handleErrorResponse(error, res);
+  }
+};
+
+const updateProfileIconSchema = z.object({
+  id: z.number(),
+  profile_icon: z.string(),
+});
+export const updateProfileIcon = async (req: Request, res: Response) => {
+  try {
+    const iconInput = updateProfileIconSchema.parse(req.body);
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id: iconInput.id },
+    });
+
+    if (!existingUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    const user = await prisma.user.update({
+      where: { id: iconInput.id },
+      data: { profile_icon: iconInput.profile_icon },
+    });
 
     res.json(user);
   } catch (error) {
