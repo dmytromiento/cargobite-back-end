@@ -4,7 +4,9 @@ Test assessment showcasing users management API.
 
 ## Screencast
 
-Screencast showcasing app: [PLACEHOLDER]
+Screencast showcasing app: 
+
+https://github.com/dmytromiento/cargobite-back-end/assets/141241827/e594f67d-2839-4fcc-8921-7512eda19bf0
 
 ## Get Started
 
