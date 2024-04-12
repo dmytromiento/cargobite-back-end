@@ -35,3 +35,29 @@ export const register = async (req: Request, res: Response) => {
     handleErrorResponse(error, res);
   }
 };
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const users = await prisma.user.findMany();
+    res.json(users);
+  } catch (error) {
+    handleErrorResponse(error, res);
+  }
+};
+
+export const getUserById = async (req: Request, res: Response) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: Number(req.params.id) },
+    });
+
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+
+    res.json(user);
+  } catch (error) {
+    handleErrorResponse(error, res);
+  }
+};
